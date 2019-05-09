@@ -1,18 +1,11 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import babel from 'rollup-plugin-babel';
-import { uglify } from 'rollup-plugin-uglify';
+const rollup = require('rollup');
+const resolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+const babel = require('rollup-plugin-babel');
+const { uglify } = require('rollup-plugin-uglify');
 
-export default {
+const inputOptions = {
   input: 'src/main.js',
-  watch: {
-    include: 'src/**',
-    exclude: 'node_modules/**'
-  },
-  output: {
-    file: 'dist/bridge.js',
-    format: 'cjs'
-  },
   plugins: [
     resolve({
       customResolveOptions: {
@@ -44,3 +37,27 @@ export default {
   ],
   external: ['lodash']
 };
+
+const outputOptions = {
+  output: {
+    file: 'dist/bridge.js',
+    format: 'cjs'
+  }
+};
+
+const watchOptions = {
+  watch: {
+    include: 'src/**',
+    exclude: 'node_modules/**'
+  }
+};
+
+const build = () => {
+  rollup.rollup(inputOptions).then(bundle => {
+    bundle.write(outputOptions).then(result => {
+      console.log(result);
+    })
+  });
+};
+
+build();
