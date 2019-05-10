@@ -1,7 +1,10 @@
 node_modules/
 src/
+dist/
 .babelrc
 .gitignore
 .prettierrc
+.prettierignore
+.vbundlerc.js
 rollup.config.js
 yarn.lock

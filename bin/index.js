@@ -115,8 +115,8 @@ const build = ({ input, output, external, pluginsConfig, buildUglify }) => {
         );
 
         const fileList = res.output.map(
-          file =>
-            `  → ${chalk.green.bold(
+          (file, index) =>
+            `  ${index === res.output.length - 1 ? '└──' : '├──'} ${chalk.green.bold(
               file.fileName +
                 Array(maxNameLength - file.fileName.length + 1)
                   .fill('')
