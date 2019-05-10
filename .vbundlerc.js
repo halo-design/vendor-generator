@@ -6,6 +6,9 @@ module.exports = {
     format: 'cjs',
     chunkFileNames: 'chunk-[name]-[hash].js',
   },
+  watch: {
+    include: 'src/**/*.js',
+  },
   external: ['lodash'],
   buildUglify: true,
 };

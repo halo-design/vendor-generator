@@ -29,27 +29,21 @@ const notify = (opts, cb) => {
   );
 };
 
-const watcher = ({ input, output, external, pluginsConfig, watchConfig }) => {
-  const inputOptions = {
-    input,
-    plugins: exportPlugin({
-      isNeedUglify: false,
-      ...pluginsConfig,
-    }),
-    external,
-  };
-
+const watcher = ({ input, output, external, plugins, watch }) => {
   const watchOptions = {
-    watch: {
-      include: 'src/**',
-      exclude: 'node_modules/**',
-    },
+    include: 'src/**',
+    exclude: 'node_modules/**',
   };
 
   const watcherTask = rollup.watch({
-    ...inputOptions,
+    input,
     output,
-    watch: merge(watchOptions, watchConfig),
+    external,
+    plugins: exportPlugin({
+      isNeedUglify: false,
+      ...plugins,
+    }),
+    watch: merge(watchOptions, watch),
   });
 
   const spinner = ora('Compiling for development...');
@@ -121,12 +115,12 @@ const watcher = ({ input, output, external, pluginsConfig, watchConfig }) => {
   });
 };
 
-const build = ({ input, output, external, pluginsConfig, buildUglify }) => {
+const build = ({ input, output, external, plugins, buildUglify }) => {
   const inputOptions = {
     input,
     plugins: exportPlugin({
       isNeedUglify: buildUglify,
-      ...pluginsConfig,
+      ...plugins,
     }),
     external,
   };
