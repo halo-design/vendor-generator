@@ -5,10 +5,20 @@ const chalk = require('chalk');
 const rollup = require('rollup');
 const program = require('commander');
 const merge = require('lodash/merge');
+const notifier = require('node-notifier');
 const exportPlugin = require('../config/plugins');
-const { getAppPath } = require('../config/env');
+const { getAppPath, getLocalPath } = require('../config/env');
 
 const userConfigPath = getAppPath('.vbundlerc.js');
+const isTravisCI = () => 'TRAVIS' in process.env && 'CI' in process.env;
+
+const notify = opts => {
+  notifier.notify({
+    title: 'Build notification',
+    icon: getLocalPath('logo.png'),
+    ...opts,
+  });
+};
 
 const watcher = ({ input, output, external, pluginsConfig, watchConfig }) => {
   const inputOptions = {
@@ -53,19 +63,31 @@ const watcher = ({ input, output, external, pluginsConfig, watchConfig }) => {
         break;
       }
       case 'END': {
+        notify({
+          message: 'Finished building all bundles!',
+        });
         spinner.succeed(
           `Finished building all bundles in ${chalk.greenBright.bold(
             ((Date.now() - startBuildingStamp) / 1000).toFixed(2) + 's'
           )}`
         );
+        if (isTravisCI) {
+          watcherTask.close();
+        }
         break;
       }
       case 'ERROR': {
         spinner.fail('Encountered an error while bundling!');
+        notify({
+          message: 'Encountered an error while bundling!',
+        });
         break;
       }
       case 'FATAL': {
         spinner.fail('Encountered an unrecoverable error!');
+        notify({
+          message: 'Encountered an unrecoverable error!',
+        });
         watcherTask.close();
         break;
       }
@@ -75,7 +97,9 @@ const watcher = ({ input, output, external, pluginsConfig, watchConfig }) => {
   ['SIGINT', 'SIGTERM'].forEach(signal => {
     process.on(signal, () => {
       watcherTask.close();
-      console.log(chalk.yellow('\nExit watching mode!\n'));
+      notify({
+        message: 'Exit watching mode!',
+      });
       process.exit(0);
     });
   });
@@ -103,8 +127,13 @@ const build = ({ input, output, external, pluginsConfig, buildUglify }) => {
     .then(bundle => {
       spinner.text = 'Writting file locally...';
       bundle.write(outputOptions).then(res => {
+        notify({
+          message: 'Compile successful!',
+        });
         spinner.succeed(
-          `created ${chalk.yellow(output.file || output.dir)} in ${chalk.green(
+          `created ${chalk.yellow.bold(
+            output.file || output.dir
+          )} in ${chalk.green.bold(
             ((Date.now() - startTime) / 1000).toFixed(2) + 's'
           )}!`
         );
@@ -116,7 +145,9 @@ const build = ({ input, output, external, pluginsConfig, buildUglify }) => {
 
         const fileList = res.output.map(
           (file, index) =>
-            `  ${index === res.output.length - 1 ? '└──' : '├──'} ${chalk.green.bold(
+            `  ${
+              index === res.output.length - 1 ? '└──' : '├──'
+            } ${chalk.green.bold(
               file.fileName +
                 Array(maxNameLength - file.fileName.length + 1)
                   .fill('')
