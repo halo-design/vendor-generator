@@ -1,37 +1,35 @@
 {
-  "name": "@ynet/jsbridge",
-  "version": "0.1.0",
-  "description": "Application JSBridge Core",
-  "homepage": "http://git.flameapp.cn/owlaford/ynet-JSBridge",
+  "name": "vendor-generator",
+  "version": "0.0.1",
+  "description": "Bundler Tool For JavaScript",
+  "homepage": "https://github.com/halo-design/vendor-generator",
   "main": "./bin/index.js",
   "author": "OwlAford",
-  "license": "ISC",
+  "license": "MIT",
   "keywords": [
-    "JSBridge",
+    "bundle",
     "cli"
   ],
   "bin": {
-    "nail-cli": "./bin/index.js"
+    "vbundle": "./bin/index.js"
   },
   "bugs": {
-    "url": "http://git.flameapp.cn/owlaford/ynet-JSBridge/issues"
+    "url": "https://github.com/halo-design/vendor-generator/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+http://git.flameapp.cn/owlaford/ynet-JSBridge.git"
+    "url": "git+https://github.com/halo-design/vendor-generator.git"
   },
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "update": "yarn upgrade-interactive --latest",
-    "compile": "node ./bin/build",
-    "pack": "rollup -c -w",
-    "build": "rollup -c",
+    "dev": "node ./bin build",
+    "build": "node ./bin build -p",
     "lint": "prettier --check 'src/**/*.js' --write"
   },
   "devDependencies": {
-    "lodash": "^4.17.11",
     "prettier": "^1.17.0"
   },
   "dependencies": {
@@ -43,6 +41,11 @@
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.4.4",
     "@babel/runtime": "^7.4.4",
+    "chalk": "^2.4.2",
+    "commander": "^2.20.0",
+    "fs-extra": "^7.0.1",
+    "lodash": "^4.17.11",
+    "ora": "^3.4.0",
     "rollup": "^1.11.2",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.3.4",
