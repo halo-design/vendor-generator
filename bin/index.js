@@ -10,14 +10,23 @@ const exportPlugin = require('../config/plugins');
 const { getAppPath, getLocalPath } = require('../config/env');
 
 const userConfigPath = getAppPath('.vbundlerc.js');
-const isTravisCI = () => 'TRAVIS' in process.env && 'CI' in process.env;
 
-const notify = opts => {
-  notifier.notify({
-    title: 'Build notification',
-    icon: getLocalPath('logo.png'),
-    ...opts,
-  });
+const notify = (opts, cb) => {
+  notifier.notify(
+    {
+      title: 'Build notification',
+      icon: getLocalPath('logo.png'),
+      sound: true,
+      sound: 'Funk',
+      ...opts,
+    },
+    (err, res) => {
+      if (err) throw err;
+      if (cb) {
+        cb(err, res);
+      }
+    }
+  );
 };
 
 const watcher = ({ input, output, external, pluginsConfig, watchConfig }) => {
@@ -63,32 +72,33 @@ const watcher = ({ input, output, external, pluginsConfig, watchConfig }) => {
         break;
       }
       case 'END': {
-        notify({
-          message: 'Finished building all bundles!',
-        });
         spinner.succeed(
           `Finished building all bundles in ${chalk.greenBright.bold(
             ((Date.now() - startBuildingStamp) / 1000).toFixed(2) + 's'
           )}`
         );
-        if (isTravisCI) {
+        if ('TRAVIS' in process.env && 'CI' in process.env) {
           watcherTask.close();
         }
         break;
       }
       case 'ERROR': {
         spinner.fail('Encountered an error while bundling!');
-        notify({
-          message: 'Encountered an error while bundling!',
-        });
         break;
       }
       case 'FATAL': {
         spinner.fail('Encountered an unrecoverable error!');
-        notify({
-          message: 'Encountered an unrecoverable error!',
-        });
-        watcherTask.close();
+        notify(
+          {
+            message: 'Encountered an unrecoverable error!',
+            wait: false,
+            timeout: 1,
+          },
+          () => {
+            watcherTask.close();
+            process.exit(0);
+          }
+        );
         break;
       }
     }
@@ -96,11 +106,17 @@ const watcher = ({ input, output, external, pluginsConfig, watchConfig }) => {
 
   ['SIGINT', 'SIGTERM'].forEach(signal => {
     process.on(signal, () => {
-      watcherTask.close();
-      notify({
-        message: 'Exit watching mode!',
-      });
-      process.exit(0);
+      notify(
+        {
+          message: 'Exit watching mode!',
+          wait: false,
+          timeout: 1,
+        },
+        () => {
+          watcherTask.close();
+          process.exit(0);
+        }
+      );
     });
   });
 };
@@ -129,6 +145,8 @@ const build = ({ input, output, external, pluginsConfig, buildUglify }) => {
       bundle.write(outputOptions).then(res => {
         notify({
           message: 'Compile successful!',
+          wait: false,
+          timeout: 1,
         });
         spinner.succeed(
           `created ${chalk.yellow.bold(
