@@ -11,6 +11,12 @@ const { getAppPath, getLocalPath } = require('../config/env');
 
 const userConfigPath = getAppPath('.vbundlerc.js');
 
+const clearConsole = () => {
+  process.stdout.write(
+    process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
+  );
+};
+
 const notify = (opts, cb) => {
   notifier.notify(
     {
@@ -46,7 +52,7 @@ const watcher = ({ input, output, external, plugins, watch }) => {
     watch: merge(watchOptions, watch),
   });
 
-  const spinner = ora('Compiling for development...');
+  const spinner = ora('Building for development...');
   let startBuildingStamp;
 
   watcherTask.on('event', event => {
@@ -66,6 +72,7 @@ const watcher = ({ input, output, external, plugins, watch }) => {
         break;
       }
       case 'END': {
+        clearConsole();
         spinner.succeed(
           `Finished building all bundles in ${chalk.greenBright.bold(
             ((Date.now() - startBuildingStamp) / 1000).toFixed(2) + 's'
@@ -130,7 +137,7 @@ const build = ({ input, output, external, plugins, buildUglify }) => {
   };
 
   const startTime = Date.now();
-  const spinner = ora('Compiling for production...').start();
+  const spinner = ora('Building for production...').start();
 
   rollup
     .rollup(inputOptions)
@@ -138,7 +145,7 @@ const build = ({ input, output, external, plugins, buildUglify }) => {
       spinner.text = 'Writting file locally...';
       bundle.write(outputOptions).then(res => {
         notify({
-          message: 'Compile successful!',
+          message: 'Build successful!',
           wait: false,
           timeout: 1,
         });
@@ -172,7 +179,7 @@ const build = ({ input, output, external, plugins, buildUglify }) => {
       });
     })
     .catch(err => {
-      spinner.fail('Compile failed!');
+      spinner.fail('Build failed!');
       throw err;
     });
 };

@@ -1,6 +1,6 @@
 {
   "name": "vendor-generator",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Bundler Tool For JavaScript",
   "homepage": "https://github.com/halo-design/vendor-generator",
   "main": "./bin/index.js",

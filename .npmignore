@@ -5,6 +5,7 @@ dist/
 .gitignore
 .prettierrc
 .prettierignore
+.travis.yml
+logo.png
 .vbundlerc.js
-rollup.config.js
 yarn.lock
