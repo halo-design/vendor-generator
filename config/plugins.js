@@ -2,6 +2,8 @@ const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const babel = require('rollup-plugin-babel');
 const { uglify } = require('rollup-plugin-uglify');
+const replace = require('rollup-plugin-replace');
+const vuePlugin = require('rollup-plugin-vue');
 const merge = require('lodash/merge');
 
 const exportPlugin = ({
@@ -10,6 +12,7 @@ const exportPlugin = ({
   babelConfig,
   uglifyConfg,
   isNeedUglify,
+  useVuePlugin,
 }) => {
   const baseOpts = [
     resolve(
@@ -52,6 +55,15 @@ const exportPlugin = ({
       )
     ),
   ];
+
+  if (useVuePlugin) {
+    baseOpts.push(vuePlugin());
+  }
+
+  baseOpts.push(replace({
+    'process.env.NODE_ENV': JSON.stringify('production'),
+  }))
+  
 
   if (isNeedUglify) {
     baseOpts.push(uglify(merge({}, uglifyConfg)));

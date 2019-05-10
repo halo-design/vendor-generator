@@ -1,6 +1,6 @@
 {
   "name": "vendor-generator",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Bundler Tool For JavaScript",
   "homepage": "https://github.com/halo-design/vendor-generator",
   "main": "./bin/index.js",
@@ -52,7 +52,10 @@
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-node-resolve": "^4.2.3",
-    "rollup-plugin-uglify": "^6.0.2"
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-uglify": "^6.0.2",
+    "rollup-plugin-vue": "^5.0.0",
+    "vue-template-compiler": "^2.6.10"
   },
   "engines": {
     "node": ">=8"

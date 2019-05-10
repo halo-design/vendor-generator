@@ -9,6 +9,9 @@ module.exports = {
   watch: {
     include: 'src/**/*.js',
   },
+  plugins: {
+    useVuePlugin: true,
+  },
   external: ['lodash'],
   buildUglify: true,
 };
