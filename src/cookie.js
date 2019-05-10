@@ -1,6 +1,6 @@
 export const getCookieVal = offset => {
   const doc = window.document;
-  let endstr = doc.cookie.indexOf(";", offset);
+  let endstr = doc.cookie.indexOf(';', offset);
   if (endstr === -1) {
     endstr = window.document.cookie.length;
   }
@@ -18,7 +18,7 @@ export const getCookie = name => {
     if (doc.cookie.substring(i, j) === arg) {
       return getCookieVal(j);
     }
-    i = doc.cookie.indexOf(" ", i) + 1;
+    i = doc.cookie.indexOf(' ', i) + 1;
     if (i === 0) {
       break;
     }

@@ -1,6 +1,6 @@
 {
   "name": "vendor-generator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Bundler Tool For JavaScript",
   "homepage": "https://github.com/halo-design/vendor-generator",
   "main": "./bin/index.js",
@@ -25,9 +25,10 @@
   },
   "scripts": {
     "update": "yarn upgrade-interactive --latest",
+    "clean": "rm -rf dist",
     "dev": "node ./bin build",
-    "build": "node ./bin build -p",
-    "lint": "prettier --check 'src/**/*.js' --write"
+    "build": "npm run clean && node ./bin build -p",
+    "lint": "prettier -c '**/*.js' --write"
   },
   "devDependencies": {
     "prettier": "^1.17.0"

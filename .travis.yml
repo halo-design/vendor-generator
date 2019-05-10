@@ -1,0 +1,34 @@
+language: node_js
+
+node_js:
+  - '8'
+
+branchs:
+  only:
+  - master
+
+env:
+  - CXX=g++-4.8
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+
+cache:
+  directories:
+    - 'node_modules'
+
+script:
+  - npm run lint
+  - npm run build
+
+deploy:
+  provider: npm
+  email: owlaford@gmail.com
+  api_key: '$NPM_TOKEN'
+  skip_cleanup: true
+  on:
+    all_branches: true

@@ -1,6 +1,9 @@
 import multiWave from './MultiWave';
-import { getCookie } from './cookie';
 import _ from 'lodash';
+
+import('./cookie').then(res => {
+  console.log(res);
+});
 
 function addAutor(target) {
   target.author = 'OwlAford';
@@ -21,7 +24,6 @@ const format = str => {
   const stamp = new Timestamp();
   stamp.setTime();
   _.merge({}, {});
-  getCookie(str);
   return str.toUpperCase();
 };
 export default { format, multiWave };

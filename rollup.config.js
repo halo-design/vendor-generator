@@ -7,40 +7,38 @@ export default {
   input: 'src/main.js',
   watch: {
     include: 'src/**',
-    exclude: 'node_modules/**'
+    exclude: 'node_modules/**',
   },
   output: {
     file: 'dist/bridge.js',
-    format: 'cjs'
+    format: 'cjs',
   },
   plugins: [
     resolve({
       customResolveOptions: {
-        moduleDirectory: 'node_modules'
-      }
+        moduleDirectory: 'node_modules',
+      },
     }),
     commonjs({
       include: 'node_modules/**',
-      sourceMap: false
+      sourceMap: false,
     }),
     babel({
       exclude: 'node_modules/**',
       runtimeHelpers: true,
       configFile: false,
       babelrc: false,
-      presets: [
-        ['@babel/env', { 'modules': false }]
-      ],
+      presets: [['@babel/env', { modules: false }]],
       plugins: [
         ['@babel/plugin-proposal-decorators', { legacy: true }],
         ['@babel/plugin-proposal-class-properties', { loose: true }],
         ['@babel/proposal-object-rest-spread', { useBuiltIns: true }],
         '@babel/proposal-numeric-separator',
         '@babel/plugin-syntax-dynamic-import',
-        '@babel/plugin-proposal-export-namespace-from'
-      ]
+        '@babel/plugin-proposal-export-namespace-from',
+      ],
     }),
-    uglify()
+    uglify(),
   ],
-  external: ['lodash']
+  external: ['lodash'],
 };

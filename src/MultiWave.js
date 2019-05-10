@@ -7,8 +7,8 @@ class MultiWave {
   constructor(el, opts) {
     this._parseNum = this._parseNum.bind(this);
     this._mergeParam = this._mergeParam.bind(this);
-    if (Object.prototype.toString.call(opts) !== "[object Array]") {
-      throw new Error("Function Parameter Error!");
+    if (Object.prototype.toString.call(opts) !== '[object Array]') {
+      throw new Error('Function Parameter Error!');
     }
     this.opts = opts;
     this.wavesParam = [];
@@ -20,24 +20,24 @@ class MultiWave {
 
   _initContainer() {
     const el = this.$el;
-    const canvas = (this.$canvans = document.createElement("canvas"));
+    const canvas = (this.$canvans = document.createElement('canvas'));
     el.appendChild(canvas);
 
-    const width = parseFloat(this._getComputedStyle(el, "width"));
-    const height = parseFloat(this._getComputedStyle(el, "height"));
+    const width = parseFloat(this._getComputedStyle(el, 'width'));
+    const height = parseFloat(this._getComputedStyle(el, 'height'));
     this._width = width;
     this._height = height;
 
     canvas.width = width;
     canvas.height = height;
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas.getContext('2d');
   }
 
   _parseNum(num, coord, relSize) {
     let size = num;
-    if (typeof num !== "number") {
+    if (typeof num !== 'number') {
       let dis = this._width;
-      if (coord === "y") {
+      if (coord === 'y') {
         dis = this._height;
       }
       if (relSize) {
@@ -53,23 +53,23 @@ class MultiWave {
     const _parseNum = this._parseNum;
     let waveWidth = _parseNum(newParams.waveWidth || oldParams.waveWidth);
     let finalParams = {
-      waveCount: Math.ceil(this._width / waveWidth) + 2
+      waveCount: Math.ceil(this._width / waveWidth) + 2,
     };
     Object.keys(newParams).forEach(key => {
       if (
-        key === "waveHeight" ||
-        key === "startFromTop" ||
-        key === "endFromTop" ||
-        key === "moveYStep"
+        key === 'waveHeight' ||
+        key === 'startFromTop' ||
+        key === 'endFromTop' ||
+        key === 'moveYStep'
       ) {
-        finalParams[key] = _parseNum(newParams[key], "y");
-      } else if (key === "moveXStep") {
+        finalParams[key] = _parseNum(newParams[key], 'y');
+      } else if (key === 'moveXStep') {
         finalParams[key] = _parseNum(newParams[key]);
-      } else if (key === "offsetX") {
+      } else if (key === 'offsetX') {
         finalParams[key] = _parseNum(newParams[key], null, waveWidth) * -1;
-      } else if (key === "moveXDirection") {
-        finalParams["dir"] = newParams[key] === "right" ? -1 : 1;
-      } else if (key === "waveWidth") {
+      } else if (key === 'moveXDirection') {
+        finalParams['dir'] = newParams[key] === 'right' ? -1 : 1;
+      } else if (key === 'waveWidth') {
         finalParams[key] = waveWidth;
       } else {
         finalParams[key] = newParams[key];
@@ -77,7 +77,7 @@ class MultiWave {
     });
     return {
       ...oldParams,
-      ...finalParams
+      ...finalParams,
     };
   }
 
@@ -88,7 +88,7 @@ class MultiWave {
           id: item.id || i,
           dir: 1,
           currentMoveX: 0,
-          currentMoveY: 0
+          currentMoveY: 0,
         },
         item
       );
@@ -97,7 +97,7 @@ class MultiWave {
 
   _getComputedStyle(el, key) {
     let computedStyle = window.getComputedStyle(el);
-    return computedStyle[key] || "";
+    return computedStyle[key] || '';
   }
 
   _drawWaveFrame() {
@@ -117,7 +117,7 @@ class MultiWave {
           moveXStep,
           currentMoveY,
           moveYStep,
-          dir
+          dir,
         } = item;
         let curX = offsetX + currentMoveX + (dir - 1) * 2 * waveWidth;
         let curY = startFromTop + currentMoveY;
@@ -167,7 +167,7 @@ class MultiWave {
     ctx.lineTo(offsetX, h);
     ctx.closePath();
 
-    if (Object.prototype.toString.call(waveColor) === "[object Array]") {
+    if (Object.prototype.toString.call(waveColor) === '[object Array]') {
       const linearGradient = ctx.createLinearGradient(0, 0, 0, this._height);
       waveColor.forEach(item => {
         linearGradient.addColorStop(item.position, item.color);

@@ -75,7 +75,7 @@ const watcher = ({ input, output, external, pluginsConfig, watchConfig }) => {
   ['SIGINT', 'SIGTERM'].forEach(signal => {
     process.on(signal, () => {
       watcherTask.close();
-      console.log(chalk.yellow('Exit watching mode!'))
+      console.log(chalk.yellow('\nExit watching mode!\n'));
       process.exit(0);
     });
   });
@@ -102,13 +102,30 @@ const build = ({ input, output, external, pluginsConfig, buildUglify }) => {
     .rollup(inputOptions)
     .then(bundle => {
       spinner.text = 'Writting file locally...';
-      bundle.write(outputOptions).then(() => {
+      bundle.write(outputOptions).then(res => {
         spinner.succeed(
-          `created ${chalk.yellow(output.file)} in ${chalk.green(
+          `created ${chalk.yellow(output.file || output.dir)} in ${chalk.green(
             ((Date.now() - startTime) / 1000).toFixed(2) + 's'
           )}!`
         );
-        console.log(chalk.cyan.bold(`  ${input} → ${output.file}\n`));
+
+        const maxNameLength = Math.max.apply(
+          null,
+          res.output.map(file => file.fileName.length)
+        );
+
+        const fileList = res.output.map(
+          file =>
+            `  → ${chalk.green.bold(
+              file.fileName +
+                Array(maxNameLength - file.fileName.length + 1)
+                  .fill('')
+                  .join(' ')
+            )}     ${chalk.yellow.bold(
+              (file.code.length / 1024).toFixed(2) + 'KB'
+            )}`
+        );
+        console.log(`  ${chalk.cyan.bold(input)}\n${fileList.join('\n')}\n`);
       });
     })
     .catch(err => {
@@ -131,7 +148,7 @@ if (fs.existsSync(userConfigPath)) {
         watcher(userConfig);
       }
     });
-  
+
   program.parse(process.argv);
 } else {
   console.log(chalk.red('\nThe config file ".vbundlerc.js" does not exist.\n'));
