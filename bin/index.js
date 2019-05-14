@@ -35,7 +35,7 @@ const notify = (opts, cb) => {
   );
 };
 
-const watcher = ({ input, output, external, plugins, watch }) => {
+const watcher = ({ input, output, external, plugins, watch, resultNotify }) => {
   const watchOptions = {
     include: 'src/**',
     exclude: 'node_modules/**',
@@ -51,6 +51,11 @@ const watcher = ({ input, output, external, plugins, watch }) => {
     }),
     watch: merge(watchOptions, watch),
   });
+
+  const killThread = () => {
+    watcherTask.close();
+    process.exit(0);
+  };
 
   const spinner = ora('Building for development...');
   let startBuildingStamp;
@@ -89,17 +94,19 @@ const watcher = ({ input, output, external, plugins, watch }) => {
       }
       case 'FATAL': {
         spinner.fail('Encountered an unrecoverable error!');
-        notify(
-          {
-            message: 'Encountered an unrecoverable error!',
-            wait: false,
-            timeout: 1,
-          },
-          () => {
-            watcherTask.close();
-            process.exit(0);
-          }
-        );
+        if (resultNotify) {
+          notify(
+            {
+              message: 'Encountered an unrecoverable error!',
+              wait: false,
+              timeout: 1,
+            },
+            killThread
+          );
+        } else {
+          console.log(chalk.red.bold('Encountered an unrecoverable error!'));
+          killThread();
+        }
         break;
       }
     }
@@ -107,22 +114,31 @@ const watcher = ({ input, output, external, plugins, watch }) => {
 
   ['SIGINT', 'SIGTERM'].forEach(signal => {
     process.on(signal, () => {
-      notify(
-        {
-          message: 'Exit watching mode!',
-          wait: false,
-          timeout: 1,
-        },
-        () => {
-          watcherTask.close();
-          process.exit(0);
-        }
-      );
+      if (resultNotify) {
+        notify(
+          {
+            message: 'Exit watching mode!',
+            wait: false,
+            timeout: 1,
+          },
+          killThread
+        );
+      } else {
+        console.log(chalk.yellow.bold('\nExit watching mode!\n'));
+        killThread();
+      }
     });
   });
 };
 
-const build = ({ input, output, external, plugins, buildUglify }) => {
+const build = ({
+  input,
+  output,
+  external,
+  plugins,
+  buildUglify,
+  resultNotify,
+}) => {
   const inputOptions = {
     input,
     plugins: exportPlugin({
@@ -144,11 +160,6 @@ const build = ({ input, output, external, plugins, buildUglify }) => {
     .then(bundle => {
       spinner.text = 'Writting file locally...';
       bundle.write(outputOptions).then(res => {
-        notify({
-          message: 'Build successful!',
-          wait: false,
-          timeout: 1,
-        });
         spinner.succeed(
           `created ${chalk.yellow.bold(
             output.file || output.dir
@@ -176,6 +187,16 @@ const build = ({ input, output, external, plugins, buildUglify }) => {
             )}`
         );
         console.log(`  ${chalk.cyan.bold(input)}\n${fileList.join('\n')}\n`);
+
+        if (resultNotify) {
+          notify({
+            message: 'Build successful!',
+            wait: false,
+            timeout: 1,
+          });
+        } else {
+          console.log(chalk.green.bold('Build successful!\n'));
+        }
       });
     })
     .catch(err => {

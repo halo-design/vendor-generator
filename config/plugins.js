@@ -60,10 +60,11 @@ const exportPlugin = ({
     baseOpts.push(vuePlugin());
   }
 
-  baseOpts.push(replace({
-    'process.env.NODE_ENV': JSON.stringify('production'),
-  }))
-  
+  baseOpts.push(
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    })
+  );
 
   if (isNeedUglify) {
     baseOpts.push(uglify(merge({}, uglifyConfg)));

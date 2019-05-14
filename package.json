@@ -1,6 +1,6 @@
 {
   "name": "vendor-generator",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Bundler Tool For JavaScript",
   "homepage": "https://github.com/halo-design/vendor-generator",
   "main": "./bin/index.js",
@@ -31,7 +31,7 @@
     "lint": "prettier -c '**/*.js' --write"
   },
   "devDependencies": {
-    "prettier": "^1.17.0"
+    "prettier": "^1.17.1"
   },
   "dependencies": {
     "@babel/core": "^7.4.4",
@@ -44,7 +44,7 @@
     "@babel/runtime": "^7.4.4",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
-    "fs-extra": "^8.0.0",
+    "fs-extra": "^8.0.1",
     "lodash": "^4.17.11",
     "node-notifier": "^5.4.0",
     "ora": "^3.4.0",

@@ -14,4 +14,5 @@ module.exports = {
   },
   external: ['lodash'],
   buildUglify: true,
+  resultNotify: false,
 };
