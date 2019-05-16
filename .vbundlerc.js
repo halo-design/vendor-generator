@@ -7,7 +7,7 @@ module.exports = {
     chunkFileNames: 'chunk-[name]-[hash].js',
   },
   watch: {
-    include: 'src/**/*.js',
+    include: ['src/**/*.js', 'src/**/*.vue'],
   },
   plugins: {
     useVuePlugin: true,

@@ -11,3 +11,5 @@
 
 
 ### Bundler Tool For JavaScript
+
+[![npm](https://nodei.co/npm/vendor-generator.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/vendor-generator)

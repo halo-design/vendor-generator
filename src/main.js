@@ -1,29 +1,8 @@
-import multiWave from './MultiWave';
-import _ from 'lodash';
+import Vue from 'vue';
+import App from './App.vue';
 
-import('./cookie').then(res => {
-  console.log(res);
-});
+Vue.config.productionTip = false;
 
-function addAutor(target) {
-  target.author = 'OwlAford';
-}
-
-@addAutor
-class Timestamp {
-  constructor() {
-    this.time = Date.now();
-  }
-
-  setTime() {
-    console.log(this.time);
-  }
-}
-
-const format = str => {
-  const stamp = new Timestamp();
-  stamp.setTime();
-  _.merge({}, {});
-  return str.toUpperCase();
-};
-export default { format, multiWave };
+new Vue({
+  render: h => h(App),
+}).$mount('#MOUNT_NODE');

@@ -1,16 +1,16 @@
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const babel = require('rollup-plugin-babel');
-const { uglify } = require('rollup-plugin-uglify');
 const replace = require('rollup-plugin-replace');
 const vuePlugin = require('rollup-plugin-vue');
+const { terser } = require('rollup-plugin-terser');
 const merge = require('lodash/merge');
 
 const exportPlugin = ({
   resolveConfig,
   commonjsConfig,
   babelConfig,
-  uglifyConfg,
+  terserConfg,
   isNeedUglify,
   useVuePlugin,
 }) => {
@@ -67,7 +67,7 @@ const exportPlugin = ({
   );
 
   if (isNeedUglify) {
-    baseOpts.push(uglify(merge({}, uglifyConfg)));
+    baseOpts.push(terser(merge({}, terserConfg)));
   }
 
   return baseOpts;
