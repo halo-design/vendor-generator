@@ -11,6 +11,7 @@ module.exports = {
   },
   plugins: {
     useVuePlugin: true,
+    useTypescript: true
   },
   external: ['lodash'],
   buildUglify: true,

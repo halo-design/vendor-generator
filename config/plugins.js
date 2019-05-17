@@ -4,6 +4,7 @@ const babel = require('rollup-plugin-babel');
 const replace = require('rollup-plugin-replace');
 const vuePlugin = require('rollup-plugin-vue');
 const { terser } = require('rollup-plugin-terser');
+const typescript = require('rollup-plugin-typescript');
 const merge = require('lodash/merge');
 
 const exportPlugin = ({
@@ -11,8 +12,10 @@ const exportPlugin = ({
   commonjsConfig,
   babelConfig,
   terserConfg,
+  typescriptConfig,
   isNeedUglify,
   useVuePlugin,
+  useTypescript
 }) => {
   const baseOpts = [
     resolve(
@@ -55,6 +58,14 @@ const exportPlugin = ({
       )
     ),
   ];
+
+  if (useTypescript) {
+    const babelOpt = baseOpts.pop();
+    baseOpts.push(typescript(merge({
+      lib: ['es5', 'es6', 'dom'],
+      target: 'es5'
+    }, typescriptConfig), babelOpt))
+  }
 
   if (useVuePlugin) {
     baseOpts.push(vuePlugin());
