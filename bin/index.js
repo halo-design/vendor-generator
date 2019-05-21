@@ -165,18 +165,21 @@ const build = ({
             output.file || output.dir
           )} in ${chalk.green.bold(
             ((Date.now() - startTime) / 1000).toFixed(2) + 's'
-          )}!`
+          )}!\n`
         );
+
+        const jsBundles = res.output.filter(file => 'code' in file);
+        const assetFiles = res.output.filter(file => 'isAsset' in file);
 
         const maxNameLength = Math.max.apply(
           null,
-          res.output.map(file => file.fileName.length)
+          jsBundles.map(file => file.fileName.length)
         );
 
-        const fileList = res.output.map(
+        const fileList = jsBundles.map(
           (file, index) =>
             `  ${
-              index === res.output.length - 1 ? '└──' : '├──'
+              index === jsBundles.length - 1 ? '└──' : '├──'
             } ${chalk.green.bold(
               file.fileName +
                 Array(maxNameLength - file.fileName.length + 1)
@@ -186,7 +189,24 @@ const build = ({
               (file.code.length / 1024).toFixed(2) + 'KB'
             )}`
         );
-        console.log(`  ${chalk.cyan.bold(input)}\n${fileList.join('\n')}\n`);
+        const fileLog = `  ${chalk.cyan.bold(input)}\n${fileList.join('\n')}\n`;
+
+        const assetList = assetFiles.map(
+          (file, index) =>
+            `  ${
+              index === assetFiles.length - 1 ? '└──' : '├──'
+            } ${chalk.gray.bold(file.fileName)}`
+        );
+
+        const assetLog = `  ${chalk.blue.bold('Assets:')}\n${assetList.join(
+          '\n'
+        )}\n`;
+
+        console.log(fileLog);
+
+        if (assetList.length > 0) {
+          console.log(assetLog);
+        }
 
         if (resultNotify) {
           notify({

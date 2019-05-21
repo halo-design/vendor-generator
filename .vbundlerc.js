@@ -7,11 +7,17 @@ module.exports = {
     chunkFileNames: 'chunk-[name]-[hash].js',
   },
   watch: {
-    include: ['src/**/*.js', 'src/**/*.vue'],
+    include: ['src/**/*.js', 'src/**/*.vue', 'src/**/*.scss'],
   },
   plugins: {
     useVuePlugin: true,
-    useTypescript: true
+    useTypescript: true,
+    cssConfig: {
+      extract: true,
+    },
+    sassConfig: {
+      output: 'dist/app.css',
+    },
   },
   external: ['lodash'],
   buildUglify: true,

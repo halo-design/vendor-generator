@@ -5,6 +5,11 @@ const replace = require('rollup-plugin-replace');
 const vuePlugin = require('rollup-plugin-vue');
 const { terser } = require('rollup-plugin-terser');
 const typescript = require('rollup-plugin-typescript');
+const sass = require('rollup-plugin-sass');
+const autoprefixer = require('autoprefixer');
+const rollupPostcss = require('rollup-plugin-postcss');
+const postcss = require('postcss');
+const cssnano = require('cssnano');
 const merge = require('lodash/merge');
 
 const exportPlugin = ({
@@ -13,10 +18,34 @@ const exportPlugin = ({
   babelConfig,
   terserConfg,
   typescriptConfig,
+  postcssConfig,
+  cssConfig,
   isNeedUglify,
   useVuePlugin,
-  useTypescript
+  useTypescript,
 }) => {
+  const postPlugins = [
+    autoprefixer({
+      browsers: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9'],
+    }),
+  ];
+
+  if (isNeedUglify) {
+    postPlugins.push(
+      cssnano({
+        reduceIdents: false,
+        safe: true,
+      })
+    );
+  }
+
+  const defaultStyleConfig = {
+    processor: css =>
+      postcss(postPlugins)
+        .process(css, { from: undefined })
+        .then(result => result.css),
+  };
+
   const baseOpts = [
     resolve(
       merge(
@@ -37,6 +66,16 @@ const exportPlugin = ({
         commonjsConfig
       )
     ),
+    rollupPostcss(
+      merge(
+        {
+          plugins: postPlugins,
+          extract: true,
+        },
+        postcssConfig
+      )
+    ),
+    sass(merge(defaultStyleConfig, cssConfig)),
     babel(
       merge(
         {
@@ -61,10 +100,18 @@ const exportPlugin = ({
 
   if (useTypescript) {
     const babelOpt = baseOpts.pop();
-    baseOpts.push(typescript(merge({
-      lib: ['es5', 'es6', 'dom'],
-      target: 'es5'
-    }, typescriptConfig), babelOpt))
+    baseOpts.push(
+      typescript(
+        merge(
+          {
+            lib: ['es5', 'es6', 'dom'],
+            target: 'es5',
+          },
+          typescriptConfig
+        ),
+        babelOpt
+      )
+    );
   }
 
   if (useVuePlugin) {
