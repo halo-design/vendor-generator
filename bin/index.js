@@ -184,31 +184,41 @@ const build = ({
 
         ui.div(
           {
+            width: 30,
             text: chalk.cyan.bold('File'),
             padding: [1, 0, 1, 0],
           },
           {
+            width: 20,
             text: chalk.cyan.bold('Size'),
             padding: [1, 0, 1, 0],
+            align: 'right',
           },
           {
+            width: 20,
             text: chalk.cyan.bold('Gzipped'),
             padding: [1, 0, 1, 0],
+            align: 'right',
           }
         );
 
         jsBundles.map(file => {
           ui.div(
             {
+              width: 30,
               text: chalk.green(outputDir + file.fileName),
             },
             {
+              width: 20,
               text: chalk.white((file.code.length / 1024).toFixed(2) + ' KiB'),
+              align: 'right',
             },
             {
+              width: 20,
               text: chalk.white(
                 (gzipSize.sync(file.code) / 1024).toFixed(2) + ' KiB'
               ),
+              align: 'right',
             }
           );
         });
@@ -216,17 +226,22 @@ const build = ({
         assetFiles.map(file => {
           ui.div(
             {
+              width: 30,
               text: chalk.blue(outputDir + file.fileName),
             },
             {
+              width: 20,
               text: chalk.white(
                 (file.source.toString('utf8').length / 1024).toFixed(2) + ' KiB'
               ),
+              align: 'right',
             },
             {
+              width: 20,
               text: chalk.white(
                 (gzipSize.sync(file.source) / 1024).toFixed(2) + ' KiB'
               ),
+              align: 'right',
             }
           );
         });
