@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const ora = require('ora');
+const path = require('path');
 const fs = require('fs-extra');
 const chalk = require('chalk');
 const rollup = require('rollup');
@@ -7,6 +8,8 @@ const program = require('commander');
 const merge = require('lodash/merge');
 const notifier = require('node-notifier');
 const exportPlugin = require('../config/plugins');
+const gzipSize = require('gzip-size');
+const ui = require('cliui')();
 const { getAppPath, getLocalPath } = require('../config/env');
 
 const userConfigPath = getAppPath('.vbundlerc.js');
@@ -81,7 +84,7 @@ const watcher = ({ input, output, external, plugins, watch, resultNotify }) => {
         spinner.succeed(
           `Finished building all bundles in ${chalk.greenBright.bold(
             ((Date.now() - startBuildingStamp) / 1000).toFixed(2) + 's'
-          )}`
+          )}!`
         );
         if ('TRAVIS' in process.env && 'CI' in process.env) {
           watcherTask.close();
@@ -165,57 +168,83 @@ const build = ({
             output.file || output.dir
           )} in ${chalk.green.bold(
             ((Date.now() - startTime) / 1000).toFixed(2) + 's'
-          )}!\n`
+          )}!`
         );
 
         const jsBundles = res.output.filter(file => 'code' in file);
         const assetFiles = res.output.filter(file => 'isAsset' in file);
 
-        const maxNameLength = Math.max.apply(
-          null,
-          jsBundles.map(file => file.fileName.length)
-        );
-
-        const fileList = jsBundles.map(
-          (file, index) =>
-            `  ${
-              index === jsBundles.length - 1 ? '└──' : '├──'
-            } ${chalk.green.bold(
-              file.fileName +
-                Array(maxNameLength - file.fileName.length + 1)
-                  .fill('')
-                  .join(' ')
-            )}     ${chalk.yellow.bold(
-              (file.code.length / 1024).toFixed(2) + 'KB'
-            )}`
-        );
-        const fileLog = `  ${chalk.cyan.bold(input)}\n${fileList.join('\n')}\n`;
-
-        const assetList = assetFiles.map(
-          (file, index) =>
-            `  ${
-              index === assetFiles.length - 1 ? '└──' : '├──'
-            } ${chalk.gray.bold(file.fileName)}`
-        );
-
-        const assetLog = `  ${chalk.blue.bold('Assets:')}\n${assetList.join(
-          '\n'
-        )}\n`;
-
-        console.log(fileLog);
-
-        if (assetList.length > 0) {
-          console.log(assetLog);
+        let outputDir = '';
+        if (output.file) {
+          outputDir = output.file;
+          outputDir = outputDir.replace(path.basename(outputDir), '') + '/';
+        } else {
+          outputDir = output.dir + '/';
         }
+
+        ui.div(
+          {
+            text: chalk.cyan.bold('File'),
+            padding: [1, 0, 1, 0],
+          },
+          {
+            text: chalk.cyan.bold('Size'),
+            padding: [1, 0, 1, 0],
+          },
+          {
+            text: chalk.cyan.bold('Gzipped'),
+            padding: [1, 0, 1, 0],
+          }
+        );
+
+        jsBundles.map(file => {
+          ui.div(
+            {
+              text: chalk.green(outputDir + file.fileName),
+            },
+            {
+              text: chalk.white((file.code.length / 1024).toFixed(2) + ' KiB'),
+            },
+            {
+              text: chalk.white(
+                (gzipSize.sync(file.code) / 1024).toFixed(2) + ' KiB'
+              ),
+            }
+          );
+        });
+
+        assetFiles.map(file => {
+          ui.div(
+            {
+              text: chalk.blue(outputDir + file.fileName),
+            },
+            {
+              text: chalk.white(
+                (file.source.toString('utf8').length / 1024).toFixed(2) + ' KiB'
+              ),
+            },
+            {
+              text: chalk.white(
+                (gzipSize.sync(file.source) / 1024).toFixed(2) + ' KiB'
+              ),
+            }
+          );
+        });
+
+        console.log(ui.toString());
 
         if (resultNotify) {
           notify({
-            message: 'Build successful!',
+            message: 'Build complete.',
             wait: false,
             timeout: 1,
           });
         } else {
-          console.log(chalk.green.bold('Build successful!\n'));
+          console.log(
+            `\n${chalk.black.bgGreen(' DONE ')} ${chalk.white(
+              'Build complete.\n'
+            )}`
+          );
         }
       });
     })
