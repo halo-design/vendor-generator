@@ -19,7 +19,7 @@ module.exports = {
       outputFolder: 'dist',
     },
   },
-  external: ['lodash'],
+  external: ['vue'],
   buildUglify: true,
   resultNotify: false,
   server: () => ({

@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import './app.scss';
+
 export default {
   name: 'app',
   data() {
