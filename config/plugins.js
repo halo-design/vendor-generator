@@ -8,6 +8,7 @@ const typescript = require('rollup-plugin-typescript');
 const sass = require('rollup-plugin-sass');
 const autoprefixer = require('autoprefixer');
 const rollupPostcss = require('rollup-plugin-postcss');
+const copy = require('rollup-plugin-copy');
 const postcss = require('postcss');
 const cssnano = require('cssnano');
 const merge = require('lodash/merge');
@@ -20,13 +21,15 @@ const exportPlugin = ({
   typescriptConfig,
   postcssConfig,
   cssConfig,
+  copyConfig,
   isNeedUglify,
   useVuePlugin,
   useTypescript,
+  browsersList
 }) => {
   const postPlugins = [
     autoprefixer({
-      browsers: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9'],
+      browsers: browsersList || ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9'],
     }),
   ];
 
@@ -126,6 +129,10 @@ const exportPlugin = ({
 
   if (isNeedUglify) {
     baseOpts.push(terser(merge({}, terserConfg)));
+  }
+
+  if (copyConfig) {
+    baseOpts.push(copy(merge({}, copyConfig)));
   }
 
   return baseOpts;

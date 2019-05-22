@@ -9,6 +9,7 @@ const merge = require('lodash/merge');
 const notifier = require('node-notifier');
 const exportPlugin = require('../config/plugins');
 const gzipSize = require('gzip-size');
+const liveServer = require('live-server');
 const ui = require('cliui')();
 const { getAppPath, getLocalPath } = require('../config/env');
 
@@ -19,6 +20,8 @@ const clearConsole = () => {
     process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
   );
 };
+
+const getOptions = Opts => (typeof Opts === 'function' ? Opts() : Opts);
 
 const notify = (opts, cb) => {
   notifier.notify(
@@ -38,7 +41,10 @@ const notify = (opts, cb) => {
   );
 };
 
-const watcher = ({ input, output, external, plugins, watch, resultNotify }) => {
+const watcher = (
+  { input, output, external, plugins, watch, resultNotify },
+  onceCallback
+) => {
   const watchOptions = {
     include: 'src/**',
     exclude: 'node_modules/**',
@@ -62,6 +68,7 @@ const watcher = ({ input, output, external, plugins, watch, resultNotify }) => {
 
   const spinner = ora('Building for development...');
   let startBuildingStamp;
+  let firstTime = true;
 
   watcherTask.on('event', event => {
     switch (event.code) {
@@ -80,12 +87,22 @@ const watcher = ({ input, output, external, plugins, watch, resultNotify }) => {
         break;
       }
       case 'END': {
-        clearConsole();
+        if (!onceCallback) {
+          clearConsole();
+        }
         spinner.succeed(
           `Finished building all bundles in ${chalk.greenBright.bold(
             ((Date.now() - startBuildingStamp) / 1000).toFixed(2) + 's'
           )}!`
         );
+
+        if (firstTime) {
+          firstTime = false;
+          if (onceCallback) {
+            onceCallback();
+          }
+        }
+
         if ('TRAVIS' in process.env && 'CI' in process.env) {
           watcherTask.close();
         }
@@ -177,7 +194,7 @@ const build = ({
         let outputDir = '';
         if (output.file) {
           outputDir = output.file;
-          outputDir = outputDir.replace(path.basename(outputDir), '') + '/';
+          outputDir = outputDir.replace(path.basename(outputDir), '');
         } else {
           outputDir = output.dir + '/';
         }
@@ -283,6 +300,20 @@ if (fs.existsSync(userConfigPath)) {
         watcher(userConfig);
       }
     });
+
+  program.command('serve').action(() => {
+    watcher(userConfig, () => {
+      liveServer.start(
+        merge(
+          {
+            open: false,
+            root: userConfig.output.dir || '/dist',
+          },
+          getOptions(userConfig.server)
+        )
+      );
+    });
+  });
 
   program.parse(process.argv);
 } else {

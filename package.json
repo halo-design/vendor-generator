@@ -1,6 +1,6 @@
 {
   "name": "vendor-generator",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Bundler Tool For JavaScript",
   "homepage": "https://github.com/halo-design/vendor-generator",
   "main": "./bin/index.js",
@@ -28,9 +28,11 @@
     "clean": "rm -rf dist",
     "dev": "node ./bin build",
     "build": "node ./bin build -p",
+    "serve": "node ./bin serve",
     "lint": "prettier -c '**/*.js' --write"
   },
   "devDependencies": {
+    "http-proxy-middleware": "^0.19.1",
     "normalize.css": "^8.0.1",
     "prettier": "^1.17.1",
     "vue": "^2.6.10"
@@ -51,6 +53,7 @@
     "cssnano": "^4.1.10",
     "fs-extra": "^8.0.1",
     "gzip-size": "^5.1.1",
+    "live-server": "^1.2.1",
     "lodash": "^4.17.11",
     "node-notifier": "^5.4.0",
     "ora": "^3.4.0",
@@ -58,6 +61,7 @@
     "rollup": "^1.12.3",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-copy": "^2.0.1",
     "rollup-plugin-node-resolve": "^5.0.0",
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-replace": "^2.2.0",

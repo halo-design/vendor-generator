@@ -1,3 +1,5 @@
+const proxy = require('http-proxy-middleware');
+
 module.exports = {
   input: 'src/main.js',
   output: {
@@ -12,14 +14,21 @@ module.exports = {
   plugins: {
     useVuePlugin: true,
     useTypescript: true,
-    cssConfig: {
-      extract: true,
-    },
-    sassConfig: {
-      output: 'dist/app.css',
+    copyConfig: {
+      targets: ['src/index.html', 'src/assets'],
+      outputFolder: 'dist',
     },
   },
   external: ['lodash'],
   buildUglify: true,
   resultNotify: false,
+  server: () => ({
+    port: 9090,
+    middleware: [
+      proxy('/media', {
+        target: 'https://owlaford.gitee.io/',
+        changeOrigin: true,
+      }),
+    ],
+  }),
 };
