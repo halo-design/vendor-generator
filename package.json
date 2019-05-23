@@ -1,6 +1,6 @@
 {
   "name": "vendor-generator",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Bundler Tool For JavaScript",
   "homepage": "https://github.com/halo-design/vendor-generator",
   "main": "./bin/index.js",
@@ -58,6 +58,7 @@
     "node-notifier": "^5.4.0",
     "ora": "^3.4.0",
     "postcss": "^7.0.16",
+    "pretty-bytes": "^5.2.0",
     "rollup": "^1.12.3",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^10.0.0",

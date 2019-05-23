@@ -11,6 +11,7 @@ const exportPlugin = require('../config/plugins');
 const gzipSize = require('gzip-size');
 const liveServer = require('live-server');
 const ui = require('cliui')();
+const prettyBytes = require('pretty-bytes');
 const { getAppPath, getLocalPath } = require('../config/env');
 
 const userConfigPath = getAppPath('.vbundlerc.js');
@@ -227,13 +228,13 @@ const build = ({
             },
             {
               width: 20,
-              text: chalk.white((file.code.length / 1024).toFixed(2) + ' KiB'),
+              text: chalk.white(prettyBytes(file.code.length / 1024)),
               align: 'right',
             },
             {
               width: 20,
               text: chalk.white(
-                (gzipSize.sync(file.code) / 1024).toFixed(2) + ' KiB'
+                prettyBytes(gzipSize.sync(file.code))
               ),
               align: 'right',
             }
@@ -249,14 +250,14 @@ const build = ({
             {
               width: 20,
               text: chalk.white(
-                (file.source.toString('utf8').length / 1024).toFixed(2) + ' KiB'
+                prettyBytes(file.source.toString('utf8').length)
               ),
               align: 'right',
             },
             {
               width: 20,
               text: chalk.white(
-                (gzipSize.sync(file.source) / 1024).toFixed(2) + ' KiB'
+                prettyBytes(gzipSize.sync(file.source))
               ),
               align: 'right',
             }
