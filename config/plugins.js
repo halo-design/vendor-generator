@@ -29,7 +29,7 @@ const exportPlugin = ({
 }) => {
   const postPlugins = [
     autoprefixer({
-      browsers: browsersList || [
+      overrideBrowserslist: browsersList || [
         '>1%',
         'last 4 versions',
         'Firefox ESR',
