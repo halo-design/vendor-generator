@@ -1,6 +1,6 @@
 {
   "name": "vendor-generator",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Bundler Tool For JavaScript",
   "homepage": "https://github.com/halo-design/vendor-generator",
   "main": "./bin/index.js",
@@ -34,7 +34,7 @@
   "devDependencies": {
     "http-proxy-middleware": "^0.19.1",
     "normalize.css": "^8.0.1",
-    "prettier": "^1.17.1",
+    "prettier": "^1.18.2",
     "vue": "^2.6.10"
   },
   "dependencies": {
@@ -57,12 +57,12 @@
     "lodash": "^4.17.11",
     "node-notifier": "^5.4.0",
     "ora": "^3.4.0",
-    "postcss": "^7.0.16",
+    "postcss": "^7.0.17",
     "pretty-bytes": "^5.2.0",
-    "rollup": "^1.13.1",
+    "rollup": "^1.14.6",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^10.0.0",
-    "rollup-plugin-copy": "^2.0.1",
+    "rollup-plugin-copy": "^3.0.0",
     "rollup-plugin-node-resolve": "^5.0.1",
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-replace": "^2.2.0",
@@ -70,7 +70,7 @@
     "rollup-plugin-terser": "^5.0.0",
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-vue": "^5.0.0",
-    "tslib": "^1.9.3",
+    "tslib": "^1.10.0",
     "typescript": "^3.5.1",
     "vue-template-compiler": "^2.6.10"
   },

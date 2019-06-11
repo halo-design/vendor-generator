@@ -15,7 +15,10 @@ module.exports = {
     useVuePlugin: true,
     useTypescript: true,
     copyConfig: {
-      targets: ['src/index.html', 'src/assets'],
+      targets: [{
+        src: 'src/index.html',
+        dest: 'src/assets'
+      }],
       outputFolder: 'dist',
     },
   },
