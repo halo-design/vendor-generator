@@ -1,6 +1,6 @@
 {
   "name": "vendor-generator",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "Bundler Tool For JavaScript",
   "homepage": "https://github.com/halo-design/vendor-generator",
   "main": "./bin/index.js",
@@ -32,7 +32,6 @@
     "lint": "prettier -c '**/*.js' --write"
   },
   "devDependencies": {
-    "http-proxy-middleware": "^0.19.1",
     "normalize.css": "^8.0.1",
     "prettier": "^1.18.2",
     "vue": "^2.6.10"
@@ -53,6 +52,7 @@
     "cssnano": "^4.1.10",
     "fs-extra": "^8.0.1",
     "gzip-size": "^5.1.1",
+    "http-proxy-middleware": "^0.19.1",
     "live-server": "^1.2.1",
     "lodash": "^4.17.11",
     "node-notifier": "^5.4.0",
