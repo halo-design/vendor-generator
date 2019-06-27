@@ -17,9 +17,11 @@ module.exports = {
     copyConfig: {
       targets: [{
         src: 'src/index.html',
-        dest: 'src/assets'
+        dest: 'dist'
+      }, {
+        src: 'src/assets/**/*',
+        dest: 'dist/assets'
       }],
-      outputFolder: 'dist',
     },
   },
   external: ['vue'],

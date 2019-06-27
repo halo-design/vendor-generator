@@ -107,7 +107,6 @@ const exportPlugin = ({
   ];
 
   if (useTypescript) {
-    const babelOpt = baseOpts.pop();
     baseOpts.push(
       typescript(
         merge(
@@ -116,8 +115,7 @@ const exportPlugin = ({
             target: 'es5',
           },
           typescriptConfig
-        ),
-        babelOpt
+        )
       )
     );
   }
