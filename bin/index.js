@@ -233,9 +233,7 @@ const build = ({
             },
             {
               width: 20,
-              text: chalk.white(
-                prettyBytes(gzipSize.sync(file.code))
-              ),
+              text: chalk.white(prettyBytes(gzipSize.sync(file.code))),
               align: 'right',
             }
           );
@@ -256,9 +254,7 @@ const build = ({
             },
             {
               width: 20,
-              text: chalk.white(
-                prettyBytes(gzipSize.sync(file.source))
-              ),
+              text: chalk.white(prettyBytes(gzipSize.sync(file.source))),
               align: 'right',
             }
           );

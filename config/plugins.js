@@ -84,26 +84,6 @@ const exportPlugin = ({
       )
     ),
     sass(merge(defaultStyleConfig, cssConfig)),
-    babel(
-      merge(
-        {
-          exclude: 'node_modules/**',
-          runtimeHelpers: true,
-          configFile: false,
-          babelrc: false,
-          presets: [['@babel/env', { modules: false }]],
-          plugins: [
-            ['@babel/plugin-proposal-decorators', { legacy: true }],
-            ['@babel/plugin-proposal-class-properties', { loose: true }],
-            ['@babel/proposal-object-rest-spread', { useBuiltIns: true }],
-            '@babel/proposal-numeric-separator',
-            '@babel/plugin-syntax-dynamic-import',
-            '@babel/plugin-proposal-export-namespace-from',
-          ],
-        },
-        babelConfig
-      )
-    ),
   ];
 
   if (useTypescript) {
@@ -129,6 +109,29 @@ const exportPlugin = ({
       'process.env.NODE_ENV': JSON.stringify('production'),
     })
   );
+
+  baseOpts.push(
+    babel(
+      merge(
+        {
+          exclude: 'node_modules/**',
+          runtimeHelpers: true,
+          configFile: false,
+          babelrc: false,
+          presets: [['@babel/env', { modules: false }]],
+          plugins: [
+            ['@babel/plugin-proposal-decorators', { legacy: true }],
+            ['@babel/plugin-proposal-class-properties', { loose: true }],
+            ['@babel/proposal-object-rest-spread', { useBuiltIns: true }],
+            '@babel/proposal-numeric-separator',
+            '@babel/plugin-syntax-dynamic-import',
+            '@babel/plugin-proposal-export-namespace-from',
+          ],
+        },
+        babelConfig
+      )
+    ),
+  )
 
   if (isNeedUglify) {
     baseOpts.push(terser(merge({}, terserConfg)));

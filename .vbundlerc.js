@@ -13,7 +13,7 @@ module.exports = {
   },
   plugins: {
     useVuePlugin: true,
-    useTypescript: true,
+    useTypescript: false,
     copyConfig: {
       targets: [{
         src: 'src/index.html',
