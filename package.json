@@ -57,7 +57,7 @@
     "lodash": "^4.17.11",
     "node-notifier": "^5.4.0",
     "ora": "^3.4.0",
-    "postcss": "^7.0.17",
+    "postcss": "^8.2.10",
     "pretty-bytes": "^5.2.0",
     "rollup": "^1.16.2",
     "rollup-plugin-babel": "^4.3.3",
